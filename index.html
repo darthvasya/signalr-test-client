@@ -13,24 +13,29 @@
  
 <script src="js/signalr.min.js"></script>
 <script>
-    let hubUrl = 'http://localhost:61202/chat';
-    const hubConnection = new signalR.HubConnection(hubUrl);
- 
-    hubConnection.on("Send", function (data) {
- 
-        let elem = document.createElement("p");
-        elem.appendChild(document.createTextNode(data));
-        let firstElem = document.getElementById("chatroom").firstChild;
-        document.getElementById("chatroom").insertBefore(elem, firstElem);
- 
-    });
-         
-    document.getElementById("sendBtn").addEventListener("click", function (e) {
-        let message = document.getElementById("message").value;
-        hubConnection.invoke("Send", message);
-    });
- 
-    hubConnection.start();
+        let hubUrl = 'http://localhost:61202/chat?auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiKzM3NTI5ODA2MTgyMyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE1MzQxNDk5NzUsImV4cCI6MTUzNTAxMzk3NSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3QiLCJyb2xlcyI6WyJVc2VyIl19.BcVJlhWR_dl8SYf8vHvVXFCjztQVKsY01wuqb0qPaM8';
+        const hubConnection = new signalR.HubConnection(hubUrl);
+
+        hubConnection.on("ReceiveMessage", function (data) {
+
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode(data));
+            let firstElem = document.getElementById("chatroom").firstChild;
+            document.getElementById("chatroom").insertBefore(elem, firstElem);
+        });
+
+        document.getElementById("sendBtn").addEventListener("click", function (e) {
+            let message = document.getElementById("message").value;
+            // hubConnection.invoke("Send", 1, message);
+            hubConnection.invoke("Send", 2, message);
+        });
+
+        document.getElementById("subscrBtn").addEventListener("click", function (e) {
+            hubConnection.invoke("SubscribeChat", 2);
+
+        });
+
+        hubConnection.start();
 </script>
 </body>
 </html>
